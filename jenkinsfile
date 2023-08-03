@@ -1,20 +1,18 @@
 pipeline {
-    agent {label 'build_server'}
+    agent { label "build_server" }
+
     stages {
-        stage('Copy files from S3 to deployment agent') {
+        stage("This stage will build the package") {
             steps {
-                node("build_server"){
-                //create and delete new jar package
-                print("dalete the old maven package")
-                print("creating the new maven package")
-                sh 'mvn clean install'
-                //stash the jar package
-                print("prepairing the jar package to copy on deployment server")
-                //stash(includes:"/home/ubuntu/build_server/workspace/job_1@2/target/Calculator-1.0-SNAPSHOT.jar")
-                //Copy files from S3 to the deployment agent
-                //sh "aws s3 cp s3://mys301082023 /home/ubuntu/deployment_server/apache-tomcat-10.1.11/webapps/"                
+                sh "mvn clean"
+                sh "mvn install"
             }
+        }   
+        stage("This stage will copy package to S3"){
+            steps{
+                sh "aws s3 cp /home/ubuntu/build_server/workspace/job_1/target/Calculator-1.0-SNAPSHOT.jar s3://mys301082023" 
+                }
+            }
+
         }
     }
-}
-}
