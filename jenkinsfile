@@ -1,26 +1,13 @@
 pipeline {
-    agent any
-    
-    stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the code from your version control system (e.g., Git)
-                checkout scm
-            }
-        }
-        
-        stage('Build') {
-            steps {
-                // Build the project using Maven
-                sh 'mvn clean package'  // You can customize this command based on your project's build process
-            }
-        }
-        
-        stage('Test') {
-            steps {
-                // Run tests (if applicable)
-                sh 'mvn test'  // You can customize this command based on your project's testing process
-            }
-        }
-  }
-}
+	agent {label "build_server"}
+
+	stages {
+		stage ("This stage will build the package") {
+			steps {
+				sh "mvn clean"
+				sh "mvn install"
+			}
+		}
+
+    }
+}	
